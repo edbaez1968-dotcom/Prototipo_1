@@ -19,6 +19,7 @@ jugador = {
 enemigo = {
     y = 100,
     x = 100,
+    velocidad=50,
     sprite= nil
 }
 
@@ -38,15 +39,43 @@ function love.load()
     jugador.x =ventana.ancho /2
     jugador.y =ventana.alto /2
 end
-function love.update(dt)
+    function love.update(dt)
     -- Incrementaremos la variable en 1 unidad por cada segundo que la tecla "up" (flecha de arriba) esté pulsada.
     if love.keyboard.isDown("right") then
-        jugador.x =  jugador.x + (jugador.velocidad * dt)
-       
+        jugador.x =  jugador.x + (jugador.velocidad * dt)  
     end
+    if love.keyboard.isDown("left") then
+        jugador.x =  jugador.x - (jugador.velocidad * dt)  
+    end
+    if love.keyboard.isDown("down") then
+        jugador.y =  jugador.y + (jugador.velocidad * dt)  
+    end
+    if love.keyboard.isDown("up") then
+        jugador.y =  jugador.y - (jugador.velocidad * dt)  
+    end
+    -- Persecución
+    local dist_x= math.abs(enemigo.x-jugador.x)
+    local dist_y= math.abs(enemigo.y-jugador.y)
+    if dist_x> dist_y then
+        if dist_x> 15 then
+            if enemigo.x < jugador.x then
 
-    
-end
+            enemigo.x = enemigo.x + (enemigo.velocidad * dt)
+            elseif enemigo.x > jugador.x then
+             enemigo.x = enemigo.x - (enemigo.velocidad * dt)
+            end
+        end
+    else
+         if dist_y> 20 then
+            if enemigo.y < jugador.y then
+                enemigo.y = enemigo.y + (enemigo.velocidad * dt)
+            elseif enemigo.y > jugador.y then
+                enemigo.y = enemigo.y - (enemigo.velocidad * dt)
+            end
+        end
+    end
+end -- de la funcion
+
 function love.draw()
     love.graphics.setCanvas(lienzo)
     love.graphics.clear()
