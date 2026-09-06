@@ -1,30 +1,58 @@
 -- Resolucion
-ANCHO_VENTANA = 200
-ALTO_VENTANA = 205
-ESCALA = 4
+ventana={
+    ancho = 160,
+alto = 144,
+escala = 4
+}
+
 jugador = {
     y = 0,
     x = 0,
+    alto,
+    ancho,
+    origen_x,
+    origen_y,
+    velocidad= 50,
     sprite= nil
 }
-x = 0
-y = 0
-jugador.sprite = love.graphics.newImage("imagen/jugador1.jpg")
-enemigo_x = 100
-enemigo_y = 100
-enemigo= love.graphics.newImage("imagen/enem_1.png")
+
+enemigo = {
+    y = 100,
+    x = 100,
+    sprite= nil
+}
+
+
 
 function love.load()
-    love.window.setMode(ANCHO_VENTANA * ESCALA, ALTO_VENTANA * ESCALA)
+    love.window.setMode(ventana.ancho * ventana.escala, ventana.alto * ventana.escala)
     love.graphics.setDefaultFilter("nearest","nearest")
-    lienzo = love.graphics.newCanvas(ANCHO_VENTANA, ALTO_VENTANA)
-end
+    lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
+    jugador.sprite = love.graphics.newImage("imagen/pers_000.png")
+    enemigo.sprite= love.graphics.newImage("imagen/Squeletron.jpg")
 
+    jugador.ancho= jugador.sprite:getWidth()
+    jugador.alto= jugador.sprite:getHeight()
+    jugador.origen_x= jugador.ancho/2
+    jugador.origen_y= jugador.alto/2
+    jugador.x =ventana.ancho /2
+    jugador.y =ventana.alto /2
+end
+function love.update(dt)
+    -- Incrementaremos la variable en 1 unidad por cada segundo que la tecla "up" (flecha de arriba) esté pulsada.
+    if love.keyboard.isDown("right") then
+        jugador.x =  jugador.x + (jugador.velocidad * dt)
+       
+    end
+
+    
+end
 function love.draw()
     love.graphics.setCanvas(lienzo)
-        love.graphics.draw(jugador.sprite,jugador.x,jugador.y)
-        love.graphics.draw(enemigo,enemigo_x,enemigo_y)
+    love.graphics.clear()
+        love.graphics.draw(jugador.sprite,jugador.x,jugador.y,0,1,1,jugador.origen_x,jugador.origen_y)
+        love.graphics.draw(enemigo.sprite,enemigo.x,enemigo.y)
     love.graphics.setCanvas()
 
-    love.graphics.draw(lienzo, 0, 0, 0, ESCALA, ESCALA)
+    love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
 end
