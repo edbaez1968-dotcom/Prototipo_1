@@ -57,7 +57,7 @@ end
     local dist_x= math.abs(enemigo.x-jugador.x)
     local dist_y= math.abs(enemigo.y-jugador.y)
     if dist_x> dist_y then
-        if dist_x> 15 then
+        if dist_x> jugador.ancho then
             if enemigo.x < jugador.x then
 
             enemigo.x = enemigo.x + (enemigo.velocidad * dt)
@@ -66,7 +66,7 @@ end
             end
         end
     else
-         if dist_y> 20 then
+         if dist_y> jugador.alto then
             if enemigo.y < jugador.y then
                 enemigo.y = enemigo.y + (enemigo.velocidad * dt)
             elseif enemigo.y > jugador.y then
