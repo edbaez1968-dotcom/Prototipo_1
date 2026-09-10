@@ -1,3 +1,4 @@
+require("escenario")
 -- Resolucion
 ventana={
     ancho = 160,

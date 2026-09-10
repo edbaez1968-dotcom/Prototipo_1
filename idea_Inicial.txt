@@ -1,0 +1,11 @@
+
+Objetivo principal: Desarrollar un juego de plataformas e incremental (controlado por teclado) como base de su jugabilidad.
+Juego de plataformas donde el personaje se podrá mover libremente dentro de los límites de la ventana o el escenario en el que se encuentre, con el objetivo de recolectar una cantidad determinada de monedas para lograr la victoria. Por el contrario, fallar (recibir impactos de las monedas) un número límite de veces, resultará en la derrota.
+Ideas: 
+(Algunas ideas )
+
+    Aura del personaje: Un área de detección (sensor) alrededor del jugador que se reducirá o expandirá según el jugador falle o esté 
+    afectado por alguna bonificación o penalización.
+    Redimensionamiento de espacio: Ajustar la escala del prototipo 1 para que el jugador tenga mayor área para moverse.
+    Dinámica de monedas: monedas musicales más rápidas y un sistema de pila (apilamiento) para su almacenamiento. 
+    Escala y aleatoriedad: Lo ideal sería que estas monedas sean más pequeñas que el jugador y aumentar la aleatoriedad de sus patrones.
