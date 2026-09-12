@@ -151,7 +151,7 @@ function love.load()
     --Inicializacion del Jugador
     jugador.Crear(ventana.ancho/2, 70)
 
-    --Iniciar Notas // ARREGLAR BUG DEL ESCALADO
+    --Iniciar Notas 
     nota_roja = NotasMusicales:Nueva(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav")
     nota_verde = NotasMusicales:Nueva(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav")
     nota_azul = NotasMusicales:Nueva(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav")
@@ -256,9 +256,9 @@ function love.draw()
     if not derrota then
         love.graphics.print("Vidas "..jugador.vidas, 60, 10)
     end
-
+ 
     if not victoria then
-        love.graphics.print("Objetivo Notas "..jugador.notas.."/"..jugador.cancion, 450 ,10)
+        love.graphics.print("Objetivo Monedas "..jugador.monedas.."/"..jugador.meta, 450 ,10)
     end
 
     love.graphics.setColor(1, 0, 0)
