@@ -149,7 +149,9 @@ function love.load()
     lienzo = love.graphics.newCanvas(ventana.ancho, ventana.alto)
 
     --Inicializacion del Jugador
-    jugador.Crear(ventana.ancho/2, 70)
+	--Inicializacion del Jugador (Nace más arriba para no chocar con la plataforma central)
+	jugador.Crear(ventana.ancho/2, 20)
+    --jugador.Crear(ventana.ancho/2, 70)
 
 	-- Iniciar Monedas
 	moneda_oro = Monedas:Nueva(130, 130, "img/MonedaOro.png", 10, 1, "sounds/moneda_oro.wav", "oro")

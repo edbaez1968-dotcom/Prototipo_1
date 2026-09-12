@@ -36,10 +36,11 @@ jugador = {
 local tag = "jugador"
 
 -- INICIALIZACIÓN
+-- INICIALIZACIÓN
 function jugador.Crear(x, y)
     jugador.x = x
     jugador.y = y
-    jugador.sprite = love.graphics.newImage("img/Duende.png")
+    jugador.sprite = love.graphics.newImage("img/Duende.png") -- Tu sprite estático principal
     jugador.ancho = jugador.sprite:getWidth()
     jugador.alto = jugador.sprite:getHeight()
     jugador.origen_x = jugador.ancho / 2
@@ -49,14 +50,28 @@ function jugador.Crear(x, y)
     jugador.forma = love.physics.newRectangleShape(jugador.sprite:getWidth(), jugador.sprite:getHeight())
     jugador.acople = love.physics.newFixture(jugador.cuerpo, jugador.forma)
     
-    -- Animaciones del Duende 
-    -- NOTA: Asumo que tu spritesheet del duende tiene el mismo formato (16x16) que el del ninja.
-    -- Si es diferente, ajusta los valores de ancho, alto y las coordenadas (columna, fila).
-    jugador.correr_der = CrearAnimacion("img/DuendeSprites.png", 3, 16, 16, 12, true, 48, 16)
-    jugador.correr_izq = CrearAnimacion("img/DuendeSprites.png", 3, 16, 16, 12, true, 32, 16)
-    jugador.salto = CrearAnimacion("img/DuendeSprites.png", 0, 16, 16, 2, false, 16, 96)
+    -- ==========================================
+    -- NUEVAS ANIMACIONES PARA EL DUENDE
+    -- ==========================================
+    -- Parámetros: (imagen, limite_frames, ancho, alto, velocidad, esVertical, columna_inicio, fila_inicio)
+    -- limite = 9 (porque son 10 frames, del 0 al 9)
+    -- esVertical = false (porque las animaciones están en filas horizontales)
     
+    -- Fila 4 (y=48): Caminar a la derecha
+    jugador.correr_der = CrearAnimacion("img/DuendeSprites.png", 9, 16, 16, 10, false, 0, 48)
+    
+    -- Fila 2 (y=16): Caminar a la izquierda
+    jugador.correr_izq = CrearAnimacion("img/DuendeSprites.png", 9, 16, 16, 10, false, 0, 16)
+    
+    -- Fila 3 (y=32): De espaldas (Lo usaremos como animación de Salto)
+    jugador.salto = CrearAnimacion("img/DuendeSprites.png", 9, 16, 16, 10, false, 0, 32)
+    
+    -- IMPORTANTE: Inicialmente desactivamos las animaciones para que no se dibujen encima del sprite quieto
+    jugador.correr_der.activado = false
+    jugador.correr_izq.activado = false
+    jugador.salto.activado = false
     -----------
+    
     jugador.acople:setUserData(tag)
     jugador.cuerpo:setFixedRotation(true)
 end
