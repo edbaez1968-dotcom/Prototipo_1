@@ -9,3 +9,7 @@ Ideas:
     Redimensionamiento de espacio: Ajustar la escala del prototipo 1 para que el jugador tenga mayor área para moverse.
     Dinámica de monedas: monedas musicales más rápidas y un sistema de pila (apilamiento) para su almacenamiento. 
     Escala y aleatoriedad: Lo ideal sería que estas monedas sean más pequeñas que el jugador y aumentar la aleatoriedad de sus patrones.
+Nueva Temática: "El Duende Recolector del Bosque Mágico"
+Concepto: Un duende vive en un bosque encantado donde llueven monedas mágicas. 
+Debe atrapar monedas de oro (valen más) y monedas de plata (más rápidas) antes de que escapen. 
+El escenario será un bosque mágico con árboles gigantes, hongos luminosos y ramas flotantes.

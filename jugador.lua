@@ -16,11 +16,10 @@ jugador = {
     acople = nil,
     encontacto = 0,
     
-    -- Estadísticas del juego
+    -- Lleva las estadísticas del juego
     vidas = 3,
-    meta = 15,          -- Antes 'cancion' (10). Ahora necesita 15 monedas para ganar.
-    monedas = 0,        -- Antes 'notas'. Contador de monedas recolectadas.
-    
+    meta = 15,         
+    monedas = 0,        
     -- Animaciones
     correr_der = nil,
     correr_izq = nil,

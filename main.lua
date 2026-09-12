@@ -1,6 +1,6 @@
 require ("escenario")
 require ("jugador")
-require ("notasmusicales")
+require ("monedas")
 require ("animaciones")
 
 -- VENTANA     (pensado para un juego pixel art)
@@ -111,12 +111,12 @@ end
 function love.keypressed(key, scancode, isrepeat)
     if key == "f1" then
         depurar = not depurar
-    elseif key == "q" and not ataque.activado then
-        ataque.activado =true
-        love.audio.play(sonidos.sfx_whoosh)
-    elseif key == "w" and not ataque2.activado then
-        ataque2.activado =true
-        love.audio.play(sonidos.sfx_whoosh)
+    elseif key == "q" and not ataque_oro.activado then
+		ataque_oro.activado = true
+		love.audio.play(sonidos.sfx_whoosh)
+	elseif key == "w" and not ataque_plata.activado then
+		ataque_plata.activado = true
+		love.audio.play(sonidos.sfx_whoosh)
     elseif key == "e" and not ataque3.activado then
         ataque3.activado =true
         love.audio.play(sonidos.sfx_whoosh)
@@ -151,126 +151,100 @@ function love.load()
     --Inicializacion del Jugador
     jugador.Crear(ventana.ancho/2, 70)
 
-    --Iniciar Notas 
-    nota_roja = NotasMusicales:Nueva(130, 130, "img/Rojo.png", 10, 1, "sounds/cortar.wav")
-    nota_verde = NotasMusicales:Nueva(130,130, "img/Verde.png", 20, 1, "sounds/colision.wav")
-    nota_azul = NotasMusicales:Nueva(130,130, "img/Azul.png", 10, 1, "sounds/espada.wav")
-    nota_amarilla = NotasMusicales:Nueva(130,130, "img/Amarillo.png", 10, 1, "sounds/pium.mp3")
+	-- Iniciar Monedas
+	moneda_oro = Monedas:Nueva(130, 130, "img/MonedaOro.png", 10, 1, "sounds/moneda_oro.wav", "oro")
+	moneda_plata = Monedas:Nueva(130, 130, "img/MonedaPlata.png", 20, 1, "sounds/moneda_plata.wav", "plata")
 
-    -- Ataques musicalesl
-    ataque = CrearAnimacion("img/CortarSprites.png",3,32,32,12, false, 32, 0)
-    ataque.activado = false
+	-- Ataques del Duende (Solo 2: Q para Oro, W para Plata)
+	ataque_oro = CrearAnimacion("img/AtaqueOro.png", 3, 32, 32, 12, false, 32, 0)
+	ataque_oro.activado = false
 
-    ataque2 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
-    ataque2.activado = false
+	ataque_plata = CrearAnimacion("img/AtaquePlata.png", 4, 25, 24, 12, false, 25, 0)
+	ataque_plata.activado = false
 
-    ataque3 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
-    ataque3.activado = false
-
-    ataque4 = CrearAnimacion("img/AuraSprites.png",4,25,24,12, false, 25, 0)
-    ataque4.activado = false
+    ataque3 = CrearAnimacion("img/AtaqueOro.png", 3, 32, 32, 12, false, 32, 0) 
+	ataque3.activado = false
+	ataque4 = CrearAnimacion("img/AtaqueOro.png", 3, 32, 32, 12, false, 32, 0) 
+	ataque4.activado = false
+	
+	
+-- Posiciones iniciales
+math.randomseed(os.time())
+moneda_oro:PosicionarMoneda()
+moneda_plata:PosicionarMoneda()
 
     -- Posiciones de notas musicales
     math.randomseed(os.time())
-    nota_roja:PosicionarNota()
-    nota_verde:PosicionarNota()
-    nota_azul:PosicionarNota()
-    nota_amarilla:PosicionarNota()
 
     CrearEscenario()
 end
 
--- ACTUALIZACION
+-- ACTUALIZACION-- 
 function love.update(dt)
-    
-     if derrota or victoria then
+    if derrota or victoria then
         return
     end
-
+    
     world:update(dt)
-
     jugador.Actualizar(dt)
-
-    -- Animaciones de ataque del juegaor
-    ActualizarAnimacion(ataque,dt, true)
-    ActualizarAnimacion(ataque2,dt, true)
-    ActualizarAnimacion(ataque3,dt, true)
-    ActualizarAnimacion(ataque4,dt, true)
-
-    --Movimiento de las notas musicales
-    nota_roja:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-    nota_verde:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-    nota_azul:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-    nota_amarilla:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
-
-    --Verificación de colision de las notas musicales con el juegador
-    nota_roja.atrapado = nota_roja:Colisiones()
-    nota_verde.atrapado = nota_verde:Colisiones()
-    nota_azul.atrapado = nota_azul:Colisiones()
-    nota_amarilla.atrapado = nota_amarilla:Colisiones()
-
-   --Función que verifica quien recibio el golpe y las condiciones de derrota/victoria
-   nota_roja:Golpe(ataque)
-   nota_verde:Golpe(ataque2)
-   nota_azul:Golpe(ataque3)
-   nota_amarilla:Golpe(ataque4)
-
+    
+    -- Animaciones de ataque del jugador (SOLO 2 ataques ahora)
+    ActualizarAnimacion(ataque_oro, dt, true)
+    ActualizarAnimacion(ataque_plata, dt, true)
+    
+    -- Movimiento de las monedas
+    moneda_oro:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
+    moneda_plata:Actualizar(jugador.cuerpo:getX(), jugador.cuerpo:getY(), jugador.ancho, jugador.alto, dt)
+    
+    -- Verificación de colisión
+    moneda_oro.recolectada = moneda_oro:Colisiones()
+    moneda_plata.recolectada = moneda_plata:Colisiones()
+    
+    -- Función que verifica el tipo de ataque y las condiciones de victoria/derrota
+    moneda_oro:Recolectar("oro")
+    moneda_plata:Recolectar("plata")
 end
-
 -- RENDER
 function love.draw()
     love.graphics.setCanvas(lienzo)
     love.graphics.clear()
-
+    
     DibujarEscenario()
-
-    jugador:Dibujar()
-
-    love.graphics.setColor(1, 0, 0)
-    DibujarAnimacion(ataque, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 8, jugador.origen_y + 8)
-    love.graphics.setColor(0, 1, 0)
-    DibujarAnimacion(ataque2, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 5, jugador.origen_y + 5)
-    love.graphics.setColor(0, 0, 1)
-    DibujarAnimacion(ataque3, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 5, jugador.origen_y + 5)
-    love.graphics.setColor(1, 1, 0)
-    DibujarAnimacion(ataque4, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 5, jugador.origen_y + 5)
+    jugador:Dibujar() 
+    
+    -- Dibuja los ataques (SOLO 2)
+    love.graphics.setColor(1, 0.8, 0) -- Color dorado
+    DibujarAnimacion(ataque_oro, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 8, jugador.origen_y + 8)
+    
+    love.graphics.setColor(0.8, 0.8, 1) -- Color plateado
+    DibujarAnimacion(ataque_plata, redondear(jugador.cuerpo:getX()), redondear(jugador.cuerpo:getY()), jugador.origen_x + 5, jugador.origen_y + 5)
+    
     love.graphics.setColor(1, 1, 1)
-
-    nota_roja:Dibujar()
-    nota_verde:Dibujar()
-    nota_azul:Dibujar()
-    nota_amarilla:Dibujar()
-
+    
+    -- Dibuja las monedas (SOLO 2)
+    moneda_oro:Dibujar()
+    moneda_plata:Dibujar()
+    
     if depurar then
         debugHitboxes()
     end
-
+    
     love.graphics.setCanvas()
-
     love.graphics.draw(lienzo, 0, 0, 0, ventana.escala, ventana.escala)
-
-       if depurar then
+    
+    if depurar then
         debugUI()
     end
-
-    if not derrota then
-        love.graphics.print("Vidas "..jugador.vidas, 60, 10)
-    end
- 
-    if not victoria then
-        love.graphics.print("Objetivo Monedas "..jugador.monedas.."/"..jugador.meta, 450 ,10)
-    end
-
-    love.graphics.setColor(1, 0, 0)
-    if contacto then
-        love.graphics.print("CHOQUE", 650/2,200 + 20)
-        love.graphics.print(entidad1, 650/2,200 + 30)
-        love.graphics.print(entidad2, 650/2,200 + 40)
-        love.graphics.print(jugador.encontacto, 650/2,200 + 50)
-    end
-
-    love.graphics.setColor(1, 1, 0)
-    love.graphics.print ("Presiona Q W E R para golpear las notas segun su color correspondiente",100,500 + 20)
-    love.graphics.setColor(1, 1, 1)
     
+    -- Interfaz de usuario
+    if not derrota then
+        love.graphics.print("Vidas: "..jugador.vidas, 10, 10)
+    end
+    if not victoria then
+        love.graphics.print("Monedas: "..jugador.monedas.."/"..jugador.meta, 10, 25)
+    end
+    
+    love.graphics.setColor(1, 1, 0)
+    love.graphics.print("Presiona Q (Oro) y W (Plata) para recolectar", 10, 40)
+    love.graphics.setColor(1, 1, 1)
 end
