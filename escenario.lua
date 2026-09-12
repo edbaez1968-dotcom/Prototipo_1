@@ -1,66 +1,158 @@
+-- Escenario: Bosque Encantado del Duende
 Estructuras = {}
 Estructuras.__index = Estructuras
 
-local tag1 = "Pared"
-local tag2 = "Piso"
-local tag3 = "Plataforma"
+-- Tags temáticos
+local tag_arbol_izq = "ArbolIzquierdo"
+local tag_arbol_der = "ArbolDerecho"
+local tag_suelo = "SueloBosque"
+local tag_rama = "RamaFlotante"
+local tag_hongo = "HongoGigante"
 
 function Estructuras:Nuevo(x, y, ruta, tag, escalax, escalay)
-
-    local plataforma = setmetatable({}, Estructuras)
-
-    plataforma.sprite = love.graphics.newImage(ruta)
-    plataforma.cuerpo = love.physics.newBody(world, x, y)
-    plataforma.escala_x = escalax
-    plataforma.escala_y = escalay
-    plataforma.forma = love.physics.newRectangleShape(plataforma.sprite:getWidth()*plataforma.escala_x, plataforma.sprite:getHeight()*plataforma.escala_y)
-    plataforma.acople = love.physics.newFixture(plataforma.cuerpo, plataforma.forma)
-    plataforma.acople:setUserData(tag)
-
-    plataforma.acople:setFriction (0) -- Evita que el jugador pueda agarrarse a las estructuras
-
-    return plataforma
-
+    local estructura = setmetatable({}, Estructuras)
+    estructura.sprite = love.graphics.newImage(ruta)
+    estructura.cuerpo = love.physics.newBody(world, x, y)
+    estructura.escala_x = escalax
+    estructura.escala_y = escalay
+    estructura.forma = love.physics.newRectangleShape(
+        estructura.sprite:getWidth() * estructura.escala_x, 
+        estructura.sprite:getHeight() * estructura.escala_y
+    )
+    estructura.acople = love.physics.newFixture(estructura.cuerpo, estructura.forma)
+    estructura.acople:setUserData(tag)
+    estructura.acople:setFriction(0.3) -- Más fricción para sensación de tierra/madera
+    return estructura
 end
 
----- FUNCION PARA CREAR PARTES DEL ESCENARIO
-
-function Estructuras:DibujarPlataforma()
-    --love.graphics.polygon("fill", self.cuerpo:getWorldPoints(self.forma:getPoints()))
-    love.graphics.draw(self.sprite, self.cuerpo:getX(), self.cuerpo:getY(), 0, self.escala_x, self.escala_y, self.sprite:getWidth()/2, self.sprite:getHeight()/2)
+---- FUNCION PARA DIBUJAR ESTRUCTURAS DEL BOSQUE
+function Estructuras:DibujarEstructura()
+    love.graphics.draw(
+        self.sprite, 
+        self.cuerpo:getX(), 
+        self.cuerpo:getY(), 
+        0, 
+        self.escala_x, 
+        self.escala_y, 
+        self.sprite:getWidth()/2, 
+        self.sprite:getHeight()/2
+    )
 end
 
----- FUNCIONES PARA CARGAR y DIBUJAR EL ESCENARIO RESPECTIVAMENTE
-
+---- FUNCION PARA CREAR EL BOSQUE ENCANTADO
 function CrearEscenario()
-    columnaizquieda = Estructuras:Nuevo(6, 144/2, "img/Wall.png", tag1, 0.75, 1)
-    columnaderecha = Estructuras: Nuevo(154,144/2,"img/Wall.png", tag1, 0.75, 1)
-
-    piso = Estructuras:Nuevo(160/2, 140, "img/Floor.png", tag2, 1, 1)
-
-    --plataformas sin sprites
-    centro = Estructuras:Nuevo(ventana.ancho/2, ventana.alto/2, "img/Floor.png", tag3, 0.25, 0.50)
-
-    superior_izq = Estructuras:Nuevo(40, 40, "img/Floor.png", tag3, 0.20, 0.50)
-    superior_der = Estructuras:Nuevo(120, 40, "img/Floor.png", tag3, 0.20, 0.50)
-    inferior_izq = Estructuras:Nuevo(40, 110, "img/Floor.png", tag3, 0.20, 0.50)
-    inferior_der = Estructuras:Nuevo(120, 110, "img/Floor.png", tag3, 0.20, 0.50)
+    -- ÁRBOLES GIGANTES (paredes laterales)
+    arbol_izquierdo = Estructuras:Nuevo(
+        6, 
+        144/2, 
+        "img/ArbolTronco.png",  -- Tronco con musgo
+        tag_arbol_izq, 
+        0.75, 
+        1
+    )
+    
+    arbol_derecho = Estructuras:Nuevo(
+        154,
+        144/2,
+        "img/ArbolTronco.png",
+        tag_arbol_der,
+        0.75,
+        1
+    )
+    
+    -- SUELO DEL BOSQUE (tierra con hierba)
+    suelo_bosque = Estructuras:Nuevo(
+        160/2, 
+        140, 
+        "img/SueloBosque.png",  -- Tierra con raíces y hierba
+        tag_suelo, 
+        1, 
+        1
+    )
+    
+    -- PLATAFORMAS: RAMAS FLOTANTES (distribuidas estratégicamente)
+    rama_central = Estructuras:Nuevo(
+        ventana.ancho/2, 
+        ventana.alto/2, 
+        "img/RamaFlotante.png",  -- Rama con hojas
+        tag_rama, 
+        0.30,  -- Más ancha para mejor jugabilidad
+        0.50
+    )
+    
+    rama_superior_izq = Estructuras:Nuevo(
+        35, 
+        35, 
+        "img/RamaFlotante.png",
+        tag_rama,
+        0.25,
+        0.50
+    )
+    
+    rama_superior_der = Estructuras:Nuevo(
+        125, 
+        35, 
+        "img/RamaFlotante.png",
+        tag_rama,
+        0.25,
+        0.50
+    )
+    
+    rama_inferior_izq = Estructuras:Nuevo(
+        35, 
+        105, 
+        "img/RamaFlotante.png",
+        tag_rama,
+        0.25,
+        0.50
+    )
+    
+    rama_inferior_der = Estructuras:Nuevo(
+        125, 
+        105, 
+        "img/RamaFlotante.png",
+        tag_rama,
+        0.25,
+        0.50
+    )
+    
+    -- HONGOS GIGANTES (plataformas decorativas adicionales)
+    hongo_izq = Estructuras:Nuevo(
+        70, 
+        70, 
+        "img/HongoGigante.png",  -- Hongo con puntos
+        tag_hongo,
+        0.20,
+        0.40
+    )
+    
+    hongo_der = Estructuras:Nuevo(
+        90, 
+        70, 
+        "img/HongoGigante.png",
+        tag_hongo,
+        0.20,
+        0.40
+    )
 end
 
---NOTA: El cuerpo FISICO se origina desde el centro, mientras que los SPRITES desde la esquina superior izq
+-- FUNCION PARA DIBUJAR TODO EL ESCENARIO
 function DibujarEscenario()
-    columnaizquieda:DibujarPlataforma()
-    columnaderecha:DibujarPlataforma()
-
-    piso:DibujarPlataforma()
-
-    --plataformas sin sprite
-    love.graphics.setColor(0,1,0)
-    centro:DibujarPlataforma()
-
-    superior_izq:DibujarPlataforma()
-    superior_der:DibujarPlataforma()
-    inferior_izq:DibujarPlataforma()
-    inferior_der:DibujarPlataforma()
-    love.graphics.setColor(1,1,1)
+    -- Dibujar árboles (paredes)
+    arbol_izquierdo:DibujarEstructura()
+    arbol_derecho:DibujarEstructura()
+    
+    -- Dibujar suelo
+    suelo_bosque:DibujarEstructura()
+    
+    -- Dibujar ramas flotantes
+    rama_central:DibujarEstructura()
+    rama_superior_izq:DibujarEstructura()
+    rama_superior_der:DibujarEstructura()
+    rama_inferior_izq:DibujarEstructura()
+    rama_inferior_der:DibujarEstructura()
+    
+    -- Dibujar hongos gigantes
+    hongo_izq:DibujarEstructura()
+    hongo_der:DibujarEstructura()
 end
